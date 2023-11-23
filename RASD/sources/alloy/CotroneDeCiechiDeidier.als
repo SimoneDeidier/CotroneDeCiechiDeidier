@@ -111,7 +111,7 @@ fact {all p : Password | one a : Account | a.password = p }
 -- Tournament:
 
 	-- All tournaments have at least  one Educator
-	-- fact { all t : Tournament | one e : Educator | e in t.educators } -- ridondante?
+	-- fact { all t : Tournament | one e : Educator | e in t.educators } -- ridondante? ==> si
 
 -- All battles of one tournament has the creator that is one educator in that tournament
 fact { all b : Battle | one t : Tournament | b in t.battles and
@@ -135,7 +135,7 @@ fact { all t : Tournament | t.status = SUBSCRIPTION_TOURNAMENT implies
 
 -- If a tournament is active or ended it has no battle that are not ended
 fact { all t : Tournament | t.status = ACTIVE_TOURNAMENT or t.status = ENDED_TOURNAMENT implies
-	no one b : Battle | b in t.battles and b.status != ENDED_BATTLE }
+	no one b : Battle | b in t.battles and b.status != ENDED_BATTLE } -- errore!
 
 
 
