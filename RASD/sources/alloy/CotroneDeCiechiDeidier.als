@@ -149,13 +149,17 @@ fact { all t : Tournament | ( t.status = ACTIVE_TOURNAMENT or t.status = ENDED_T
 -- For all tournaments exists only one creator
 fact { all t : Tournament | one e : Educator | e in t.educators and t in e.createdTournaments }
 
--- The creator of a badge in a specific tournament is the creator of that tournament
--- fact { all t : Tournament | all b : Badge | b in t.badges implies
-	-- one e : Educator | e = b.creator and t in e.createdTournaments }
-
 -- All the battles in a tournament are created after the tournament creation
 fact  { all t : Tournament | all b : Battle | b in t.battles implies
 	b.creation_date >= t.creation_date }
+
+-- There are no tournaments created by two or more educators
+fact { no disj e1, e2 : Educator | all t : Tournament | e1 != e2 and
+	t in e1.createdTournaments and t in e2.createdTournaments }
+
+-- A battle can be part only of one tournament
+fact { no disj t1, t2 : Tournament | all b : Battle | t1 != t2 and
+	b in t1.battles and b in t2.battles }
 
 -- Battle:
 
@@ -173,7 +177,7 @@ fact { all b : Battle | b.status = SUBSCRIPTION_BATTLE iff
 fact { all b : Battle | all t : Team | t in b.participants implies
 	t.subscription_date < b.registration_deadline }
 
--- One battle is active if andn only if the deadline for submissions has not been reached yet
+-- One battle is active if and only if the deadline for submissions has not been reached yet
 fact { all b : Battle | b.status = ACTIVE_BATTLE iff
 	b.submission_deadline > currTime.time }
 
@@ -202,6 +206,9 @@ fact { all b : Battle | ( b.registration_deadline < currTime.time and # b.partic
 -- If a battle don't need a manual evaluation, a manual evaluation can not be inserted
 fact { all b : Battle | b.needs_manual_eval = False implies 
 	b.manual_eval_inserted = False}
+
+-- There are no battles created before the tournament subscription phase
+fact { no b : Battle | all t : Tournament | b in t.battles and b.creation_date <= t.registration_deadline }
 
 -- Badge:
 
@@ -254,30 +261,33 @@ fact { all t : Tournament | all b : Battle | all team : Team | all s : Student |
 	s in t.participants }
 
 -- If a student is in a team for a battle, it can't be also a member of another team in the same battle
-fact { no disj t1, t2 : Team | all b : Battle | ( t1 in b.participants and t2 in b.participants ) and
+fact { no disj t1, t2 : Team | all b : Battle | t1 != t2 and ( t1 in b.participants and t2 in b.participants ) and
 	( one s : Student | s in t1.members and s in t2.members ) }
 
 -- A team can be registered in a battle only after the battle creation and before the deadline
 fact { all b : Battle | all t : Team | t in b.participants implies
 	( t.subscription_date > b.creation_date and t.subscription_date < b.registration_deadline ) }
 
+-- ASSERTIONS
 
+-- Assert 
 
-pred Test {
-	#Tournament = 1
-	#Battle = 2
-	#Educator = 1
-	#Team = 2
-	#Student = 2
-	#Badge = 2
+-- PREDICATES
+
+pred ComplexWorld {
+	#Tournament = 2
+	//some b : Battle | b.status = SUBSCRIPTION_BATTLE
+	some b : Battle | b.status = ACTIVE_BATTLE
+	//some b : Battle | b.status = CONSOLIDATION_STAGE
+	//some b : Battle | b.status = ENDED_BATTLE
+	#currTime = 1
 }
-run Test
+run ComplexWorld
 
 /*
  * COSE CHE NON VANNO:
  * 
  * - Cambiando cardinalità del test si rompe tutto
- * - Esistono battaglie attive senza alcun team registrato (impossibile) (c'è ancora? BOH)
  */
 
 
