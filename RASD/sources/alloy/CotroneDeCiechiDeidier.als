@@ -28,10 +28,10 @@ one sig ASSIGNED extends BadgeStatus {}
 one sig BADGE_INVALID extends BadgeStatus {}
 
 -- All possible Battle Invitation Status
-abstract sig BattleInvitationStatus {}
+/* abstract sig BattleInvitationStatus {}
 one sig VALID extends BattleInvitationStatus {}
 one sig ACCEPTED extends BattleInvitationStatus {}
-one sig INVITATION_INVALID extends BattleInvitationStatus {}
+one sig INVITATION_INVALID extends BattleInvitationStatus {} */
 
 --Boolean definition
 abstract sig Bool {}
@@ -59,7 +59,7 @@ sig Tournament {
 	creation_date : one Int,
 	registration_deadline : one Int,
 	badges : set Badge
-} {registration_deadline > creation_date}
+} { registration_deadline > creation_date and creation_date >= 0 }
 
 sig Battle {
 	status : one BattleStatus,
@@ -72,9 +72,11 @@ sig Battle {
 	max_team_dim : one Int,
 	needs_manual_eval : one Bool,
 	manual_eval_inserted : one Bool
-} {registration_deadline > creation_date and
+} { registration_deadline > creation_date and
 	submission_deadline > registration_deadline and
-	max_team_dim >= min_team_dim
+	max_team_dim >= min_team_dim and
+	min_team_dim > 0 and
+	creation_date >= 0
 }
 
 sig Badge {
@@ -82,14 +84,14 @@ sig Badge {
 	creator : one Educator,
 	owner : lone Student,
 	creation_date : one Int
-}
+} { creation_date >= 0 }
 
 sig Team{
 	members : some Student,
 	subscription_date : one Int
-}
+} { subscription_date >= 0 }
 
-sig BattleInvitation {
+/* sig BattleInvitation {
 	status : one BattleInvitationStatus,
 	team : one Team,
 	student : one Student,
@@ -98,7 +100,7 @@ sig BattleInvitation {
 } {
 	invitation_date < battle.registration_deadline and
 	invitation_date >= battle.creation_date
-}
+} */
 
 -- Used to model current time
 sig currTime {
@@ -128,8 +130,8 @@ fact { all b : Battle | one t : Tournament | b in t.battles and
 fact { all t : Tournament | ( t.status = NON_ENDABLE ) iff ( one b : Battle | b in t.battles and
 	b.status != ENDED_BATTLE ) }
 
--- One tournament has subscriptions open if the deadline for subscriptions has not been reached yet
-fact { all t : Tournament | t.status = SUBSCRIPTION_TOURNAMENT implies
+-- One tournament has subscriptions open if and only if the deadline for subscriptions has not been reached yet
+fact { all t : Tournament | t.status = SUBSCRIPTION_TOURNAMENT iff
 	t.registration_deadline > currTime.time }
 
 -- If a tournament has been closed, it will be always closed
@@ -140,16 +142,20 @@ fact { all t : Tournament | always( t.status = ENDED_TOURNAMENT implies
 fact { all t : Tournament | t.status = SUBSCRIPTION_TOURNAMENT implies
 	# t.battles = 0  } 
 
--- If a tournament is active or ended it has no battle that are not ended
-fact { all t : Tournament | ( t.status = ACTIVE_TOURNAMENT or t.status = ENDED_TOURNAMENT ) implies
+-- If and only if a tournament is active or ended it has no battle that are not ended
+fact { all t : Tournament | ( t.status = ACTIVE_TOURNAMENT or t.status = ENDED_TOURNAMENT ) iff
 	no b : Battle | b in t.battles and b.status != ENDED_BATTLE }
 
 -- For all tournaments exists only one creator
 fact { all t : Tournament | one e : Educator | e in t.educators and t in e.createdTournaments }
 
 -- The creator of a badge in a specific tournament is the creator of that tournament
-fact { all t : Tournament | all b : Badge | b in t.badges implies
-	one e : Educator | e = b.creator and t in e.createdTournaments }
+-- fact { all t : Tournament | all b : Badge | b in t.badges implies
+	-- one e : Educator | e = b.creator and t in e.createdTournaments }
+
+-- All the battles in a tournament are created after the tournament creation
+fact  { all t : Tournament | all b : Battle | b in t.battles implies
+	b.creation_date >= t.creation_date }
 
 -- Battle:
 
@@ -159,25 +165,25 @@ fact { no disj b1, b2 : Battle | b1 = b2 }
 -- All battles belong to a tournament
 fact { all b : Battle | one t : Tournament | b in t.battles }
 
--- One battle has subscriptions open if the deadline for subscriptions has not been reached yet
-fact { all b : Battle | b.status = SUBSCRIPTION_BATTLE implies
+-- One battle has subscriptions open if and only if the deadline for subscriptions has not been reached yet
+fact { all b : Battle | b.status = SUBSCRIPTION_BATTLE iff
 	b.registration_deadline > currTime.time }
 
 -- A team can't register in a battle after the subscription phase
 fact { all b : Battle | all t : Team | t in b.participants implies
 	t.subscription_date < b.registration_deadline }
 
--- One battle is active if the deadline for submissions has not been reached yet
-fact { all b : Battle | b.status = ACTIVE_BATTLE implies
+-- One battle is active if andn only if the deadline for submissions has not been reached yet
+fact { all b : Battle | b.status = ACTIVE_BATTLE iff
 	b.submission_deadline > currTime.time }
 
--- One battle is in consolidation phase if the deadline for submissions has been reached and it needs the manual evaluation
-fact { all b : Battle | b.status = CONSOLIDATION_STAGE implies
+-- One battle is in consolidation phase if and only if the deadline for submissions has been reached and it needs the manual evaluation
+fact { all b : Battle | b.status = CONSOLIDATION_STAGE iff
 	b.submission_deadline <= currTime.time and b.needs_manual_eval = True }
 
--- One battle is ended if the deadline for submissions has been reached and it doesn't need the manual evaluation or
+-- One battle is ended if and only if the deadline for submissions has been reached and it doesn't need the manual evaluation or
 --	the manual evaluation is inserted
-fact { all b : Battle | b.status = CONSOLIDATION_STAGE implies
+fact { all b : Battle | b.status = ENDED_BATTLE iff
 	b.submission_deadline <= currTime.time and ( b.needs_manual_eval = False or
 	( b.needs_manual_eval = True and b.manual_eval_inserted = True )) }
 
@@ -185,32 +191,94 @@ fact { all b : Battle | b.status = CONSOLIDATION_STAGE implies
 fact { all b : Battle | always( b.status = ENDED_BATTLE implies
 	after always b.status = ENDED_BATTLE ) }
 
--- All the teams are made up by only students that are registered in the tournament of that battle
-fact { all t : Tournament | all b : Battle | b in t.battles implies
-	( one team : Team | team in b.participants and ( all s : Student | s in team.members implies s in t.participants )) } -- TODO: ok????
+-- All the teams in a battle satisfy the members count constraints
+fact { all b : Battle | all t : Team | t in b.participants implies
+	( # t.members >= b.min_team_dim ) and ( # t.members =< b.max_team_dim ) }
+
+-- If in a battle there are no registered teams, it will be closed automatically
+fact { all b : Battle | ( b.registration_deadline < currTime.time and # b.participants = 0 ) implies
+	b.status = ENDED_BATTLE }
+
+-- If a battle don't need a manual evaluation, a manual evaluation can not be inserted
+fact { all b : Battle | b.needs_manual_eval = False implies 
+	b.manual_eval_inserted = False}
 
 -- Badge:
 
--- All the badge of a tournament are created during the creation of the tournament
+-- No two badges are equal
+fact { no disj b1, b2 : Badge | b1 = b2 }
+
+-- All badges belong to a tournament
+fact { all b : Badge | one t : Tournament | b in t.badges }
+
+-- A badge can be created only by the educator that has created the tournament
+fact { all e : Educator | all t : Tournament | all b : Badge | ( t in e.createdTournaments and
+	b in t.badges ) iff e = b.creator }
+
+-- A badge can be created only when a tournament is created
 fact { all b : Badge | all t : Tournament | b in t.badges implies
 	b.creation_date = t.creation_date }
 
+-- If and only if a badge is not already linked to a student, it's CREATED
+fact { all b : Badge | # b.owner = 0 iff
+	b.status = CREATED }
+
+-- A badge is assigned if and only if there is a student of the closed tournament that has been linked to the badge
+fact { all b : Badge | all t : Tournament | b.status = ASSIGNED iff
+	( b in t.badges and t.status = ENDED_TOURNAMENT and  # b.owner = 1 and b.owner in t.participants ) }
+
+-- If and only if the tournament is closed and there are no battles in it, the badge is invalid
+fact { all b : Badge | all t : Tournament | b in t.badges and
+	( t.status = ENDED_TOURNAMENT and # t.battles = 0 ) iff
+	b.status = BADGE_INVALID }
+
+-- If the badge is assigned it will always be that
+fact { all b : Badge | always( b.status = ASSIGNED implies
+	after always b.status = ASSIGNED ) }
+
+-- If the badge is invalid it will always be that
+fact { all b : Badge | always( b.status = BADGE_INVALID implies
+	after always b.status = BADGE_INVALID ) }
+
 -- Team:
 
--- If a student is in a team for a battle, it can't be also a member of another team
-fact { no disj t1, t2 : Team | one b : Battle | ( t1 in b.participants and t2 in b.participants ) and
+-- No two teams are equal
+fact { no disj t1, t2 : Team | t1 = t2 }
+
+-- All the teams are registered at least in one battle
+fact { all t : Team | one b : Battle | t in b.participants }
+
+-- All the teams are made up by only students that are registered in the tournament of that battle
+fact { all t : Tournament | all b : Battle | all team : Team | all s : Student |
+	b in t.battles and team in b.participants and s in team.members implies
+	s in t.participants }
+
+-- If a student is in a team for a battle, it can't be also a member of another team in the same battle
+fact { no disj t1, t2 : Team | all b : Battle | ( t1 in b.participants and t2 in b.participants ) and
 	( one s : Student | s in t1.members and s in t2.members ) }
+
+-- A team can be registered in a battle only after the battle creation and before the deadline
+fact { all b : Battle | all t : Team | t in b.participants implies
+	( t.subscription_date > b.creation_date and t.subscription_date < b.registration_deadline ) }
+
+
 
 pred Test {
 	#Tournament = 1
-	#Battle = 1
+	#Battle = 2
 	#Educator = 1
 	#Team = 2
 	#Student = 2
+	#Badge = 2
 }
 run Test
 
-
+/*
+ * COSE CHE NON VANNO:
+ * 
+ * - Cambiando cardinalità del test si rompe tutto
+ * - Esistono battaglie attive senza alcun team registrato (impossibile) (c'è ancora? BOH)
+ */
 
 
 
