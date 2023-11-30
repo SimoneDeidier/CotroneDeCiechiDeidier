@@ -1,12 +1,3 @@
-/*
- * GOALS SUI QUALI CI FOCALIZZIAMO:
- * G1
- * G2
- * G3
- * G8
- * G9
- */
-
 -- All possible Tournament Status
 abstract sig TournamentStatus {}
 one sig SUBSCRIPTION_TOURNAMENT extends TournamentStatus {}
@@ -41,13 +32,13 @@ abstract sig Account {
 }
 
 sig Educator extends Account {
-	var createdTournaments : set Tournament
+	createdTournaments : set Tournament
 }
 sig Student extends Account {}
 
 sig Tournament {
-	var status : one TournamentStatus,
-	var battles : set Battle,
+	status : one TournamentStatus,
+	battles : set Battle,
 	educators : some Educator,
 	participants : set Student,
 	creation_date : one Int,
@@ -237,6 +228,10 @@ fact { all b : Badge | always( b.status = BADGE_INVALID implies
 -- If a badge is invalid it can't have an owner
 fact { all b : Badge | no s : Student | b.status = BADGE_INVALID and s = b.owner }
 
+-- If a tournament is closed and has at least one battle all the badges are valid and must be assigned to a student in the tournament
+fact { all t : Tournament | ( t.status = ENDED_TOURNAMENT and # t.battles > 0 ) implies
+	( all b : Badge | one s : Student | b in t.badges and b.status = ASSIGNED and s = b.owner and s in t.participants ) }
+
 -- Team:
 
 -- No two teams are equal
@@ -260,7 +255,8 @@ fact { all b : Battle | all t : Team | t in b.participants implies
 
 -- ASSERTIONS
 
--- Check sulla battaglia 
+-- Check that every active battle are in a not closed tournament and they are created by an educator that can manage that tournament and that
+--	all the teams in that battle are formed by students registered in the tournament
 assert activeBattle {
 	all b : Battle | ( b.status = ACTIVE_BATTLE implies (( one t : Tournament | b in t.battles and t.status = NON_ENDABLE and
 	( one e : Educator | e = b.creator and e in t.educators ) and ( some team : Team | team in b.participants and
@@ -268,59 +264,90 @@ assert activeBattle {
 }
 check activeBattle
 
--- CONTROLLA CHE I TORNEI CHIUSI SIANO SOLO QUELLI O SENZA ISCRITTI O NON HANNO BATTAGLIE ATTIVE
+-- Check that all the closed tournament are those with no registrations at the end of the subscription time and those without active battle
 assert closeTournament {
 	all t : Tournament | ( t.status = ENDED_TOURNAMENT implies (( currTime.time >= t.registration_deadline and
 	# t.participants = 0 ) or ( no b : Battle | b in t.battles and b.status != ENDED_BATTLE )))
 }
 check closeTournament
 
--- Check badge
+-- Check that in every closed tournament all the badges are invalid or all the badges are assigned at one student
 assert assignedBadges {
-	all t : Tournament | ( t.status = ENDED_TOURNAMENT and # t.badges > 0 implies
-	( all b : t.badges | one s : Student | s in t.participants and s = b.owner ))
+	all t : Tournament | ( t.status = ENDED_TOURNAMENT  implies
+	(( all b : t.badges | b.status = BADGE_INVALID ) or
+	( all b : t.badges | one s : t.participants | b.status = ASSIGNED and s = b.owner )))
 }
 check assignedBadges
 
-/*-- PREDICATES
-
--- Educator creates a new tournament
-pred makeTournament [ t : Tournament, e : Educator ] {
-	t in e'.createdTournaments and
-	e'.createdTournaments = e.createdTournaments + t
+-- Check that if a tournament is not endable is because there are active battles or battles that are waiting for a manual evaluation
+--	or battle that are in subscription phase
+assert nonClosableTournaments {
+	all t : Tournament | ( t.status = NON_ENDABLE implies 
+	( some b : Battle | b.status = ACTIVE_BATTLE or ( b.needs_manual_eval = True and b.manual_eval_inserted = False ) or
+	b.status = SUBSCRIPTION_BATTLE ))
 }
-run makeTournament
+check nonClosableTournaments
 
--- Educator closes a tournament
-pred closeTournament [ t : Tournament ] {
-	t.status = ACTIVE_TOURNAMENT and t'.status = ENDED_TOURNAMENT
+-- Check that if a badge has not an owner is because the badge is invalid or because it's a badge of a tournament that is not already closed
+assert notAssignedBadges {
+	all b : Badge | ( # b.owner = 0 implies 
+	(( b.status = BADGE_INVALID ) or ( one t : Tournament | t.status != ENDED_TOURNAMENT and b in t.badges )))
 }
-run closeTournament
+check notAssignedBadges
 
--- Educator creates a new battle in a tournament where it is at least a collaborator
-pred makeBattle [ t : Tournament, b : Battle ] {
-	b in t'.battles and
-	t'.battles = t.battles + b	
+-- PREDICATES
+
+-- Generate a World to show the system's Tournament
+pred tournamentWorld {
+	# Tournament = 1
+	# Battle = 2
+	# Badge = 3
+	# Team = 1
+	# Student = 1
+	# Educator = 1
+	all t : Tournament | t.status = NON_ENDABLE
 }
-run makeBattle*/
+run tournamentWorld
 
-/*pred ComplexWorld {
-	some b : Badge | b.status = BADGE_INVALID
+-- Generate a World to show the system's Battle
+pred battleWorld {
+	# Tournament = 1
+	# Battle = 3
+	# Badge = 0
+	# Team = 3
 }
-run ComplexWorld //for 17*/
+run battleWorld
 
-/*
- * COSE CHE NON VANNO:
- * 
- * - CARDINALITA' MAX = 3 !!!
- */
+-- Generate a World to show the system's Educator
+pred educatorWorld {
+	# Battle = 0
+	# Badge = 0
+	# Educator = 3
+	one t : Tournament | all e : Educator | e in t.educators
+}
+run educatorWorld
 
+-- Generate a World to show the system's Student
+pred studentWorld {
+	# Student = 3
+	# Battle = 1
+	# Team = 2
+	one t : Tournament | all s : Student | s in t.participants
+	all s : Student | one t : Team | s in t.members
+}
+run studentWorld for 4
 
-
-
-
-
-
+-- Generate a complete Worlds
+pred completeWorld {
+	# Tournament = 1
+	# Battle = 3
+	# Badge = 3
+	# Student = 3
+	# Educator = 3
+	# Team = 2
+	all s : Student | one t : Team | s in t.members
+}
+run completeWorld for 6
 
 
 
