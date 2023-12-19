@@ -1,0 +1,20 @@
+title Student confirm team registration
+
+activate Logged student
+activate CKB
+
+note over Logged student, CKB: Student is in the waiting room\nfor the team's creation.
+alt registration deadline not passed
+loop size constraints not respected
+Logged student->CKB: click "Join the battle!" button
+CKB->CKB:check data
+alt constraints respcted
+CKB-->Logged student:succesful battle registration page
+else constraints not respected
+CKB-->Logged student:constraints not respected error
+end
+end
+else registration deadline already passed
+Logged student->CKB: click "Join the battle!" button
+CKB-->Logged student:deadline already passed error
+end

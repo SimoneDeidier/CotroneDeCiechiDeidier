@@ -1,0 +1,16 @@
+title Student Log in
+
+activate Registered student
+activate CKB
+
+Registered student->CKB: get login page
+CKB-->Registered student: login page
+loop login fails
+Registered student->CKB: click "Log In!" button\nand submit login form
+CKB->CKB:check data
+alt data are correct
+CKB-->Registered student:personal page
+else data incorrect
+CKB-->Registered student:login page
+end
+end

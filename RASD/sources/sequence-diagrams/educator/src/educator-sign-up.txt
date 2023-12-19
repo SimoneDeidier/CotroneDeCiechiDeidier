@@ -1,0 +1,34 @@
+title Educator Sign up
+
+participant Unregistered educator
+participant CKB
+
+activate Unregistered educator
+activate CKB
+
+Unregistered educator->CKB:get Login page
+CKB-->Unregistered educator:login page
+Unregistered educator->CKB:click "Sign up" button
+CKB-->Unregistered educator: sign up page
+loop while registration ends
+Unregistered educator->CKB:click "Student sign up" button\nand submit registration form
+CKB->CKB:check data
+alt data are correct && mail verified
+CKB-->Unregistered educator:confirmation email
+CKB-->Unregistered educator:check email page
+loop regsistration link is invalid
+Unregistered educator->CKB:click confirmation\nlink on the email
+alt clicked link is valid
+CKB-->Unregistered educator:final confirmation page
+else link invalid
+CKB-->Unregistered educator: new confirmation email
+end
+end
+else data incorrect || missing data || Terms of Services not accepted
+CKB-->Unregistered educator:login page
+else user yet in the CKB's DB
+CKB-->Unregistered educator:user already in the system page
+else inserted mail is not institutional
+CKB-->Unregistered educator:not institutional email error
+end
+end

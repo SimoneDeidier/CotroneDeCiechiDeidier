@@ -1,0 +1,10 @@
+title Student show tournament's information
+
+activate Logged student
+activate CKB
+
+Logged student->CKB:get student dashboard
+CKB-->Logged student:student dashboard page
+Logged student->Logged student:search and finds\nthe tournament
+Logged student->CKB:click "More information on this tournament!" button
+CKB-->Logged student:tournament information page

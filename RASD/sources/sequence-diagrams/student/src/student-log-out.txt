@@ -1,0 +1,8 @@
+title Student Log out
+
+activate Logged student
+activate CKB
+
+Logged student->CKB:click "Log out" button
+CKB->CKB:set student\nlogged out
+CKB-->Logged student:login page

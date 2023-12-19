@@ -1,0 +1,11 @@
+title Educator closes a tournament
+
+activate Logged educator
+activate CKB
+
+note over Logged educator, CKB:Educator is an admin of the tournament\nand the tournament is in the Active state.
+Logged educator->CKB:click "View tournament's informations" button
+CKB-->Logged educator:selected tournament page
+Logged educator->CKB:click "End tournament" button
+CKB->CKB:set tournament\nstatus
+CKB-->Logged educator:tournament closed succesfulllt message

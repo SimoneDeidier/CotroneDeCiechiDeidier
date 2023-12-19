@@ -1,0 +1,19 @@
+title Educator Log in
+
+participant Registered educator
+participant CKB
+
+activate Registered educator
+activate CKB
+
+Registered educator->CKB: get login page
+CKB-->Registered educator: login page
+loop login fails
+Registered educator->CKB: click "Log In!" button\nand submit login form
+CKB->CKB:check data
+alt data are correct
+CKB-->Registered educator:personal page
+else data incorrect
+CKB-->Registered educator:login page
+end
+end

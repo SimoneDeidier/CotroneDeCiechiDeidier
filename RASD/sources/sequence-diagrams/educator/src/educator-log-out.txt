@@ -1,0 +1,11 @@
+title Educator Log out
+
+participant Logged educator
+participant CKB
+
+activate Logged educator
+activate CKB
+
+Logged educator->CKB:click "Log out" button
+CKB->CKB:set educator\nlogged out
+CKB-->Logged educator:login page

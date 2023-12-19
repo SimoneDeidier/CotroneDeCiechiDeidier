@@ -1,0 +1,21 @@
+title Educator creates a new battle
+
+activate Logged educator
+activate CKB
+
+note over Logged educator, CKB:Educator is part of the admin's team of the tournament, the\ntournament is past the subscription phase and is not ended.
+Logged educator->Logged educator:search and finds\nthe tournament
+Logged educator->CKB:click "More information about this tournament!" button
+CKB-->Logged educator:tournament information page
+Logged educator->CKB:click "Create battle!" button
+CKB-->Logged educator:battle creation page
+loop incorrect data
+Logged educator->Logged educator:fills battle\ncreation form
+Logged educator->CKB:click "Confirm battle's creation" button
+CKB->CKB:check on\nall the data
+alt correct data
+CKB-->Logged educator:battle creation confirmation
+else incorrect data || missing data
+CKB-->Logged educator:incorrect data error
+end
+end

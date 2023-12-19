@@ -1,0 +1,14 @@
+title Educator show battle's information
+
+participant Logged educator
+participant CKB
+
+activate Logged educator
+activate CKB
+
+Logged educator->Logged educator:search and finds\nthe tournament
+Logged educator->CKB:click "More information on this tournament!" button
+CKB-->Logged educator:tournament information page
+Logged educator->Logged educator:search and\nfinds the battle
+Logged educator->CKB: click "Show Battle Informations!" button
+CKB-->Logged educator:battle information page

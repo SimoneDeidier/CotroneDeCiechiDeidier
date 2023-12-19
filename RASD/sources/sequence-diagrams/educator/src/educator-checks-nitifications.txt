@@ -1,0 +1,8 @@
+title Educator checks his notifications
+
+activate Logged educator
+activate CKB
+
+Logged educator->CKB:click "My notifications" button
+CKB->CKB:gather all\nthe data
+CKB-->Logged educator:educator's notification page

@@ -1,0 +1,24 @@
+title Educator enters manual evaluation
+
+activate Logged educator
+activate CKB
+
+note over Logged educator, CKB:Educator is part of the admin's team of the tournament and one battle\ncreated by the educator has ended and needs manual evaluation.
+Logged educator->CKB:click "View tournament's informations" button
+CKB-->Logged educator:tournament information page
+Logged educator->CKB:click "View battle's informations" button
+CKB-->Logged educator:battle information page
+Logged educator->CKB:click "Assign manual evaluation" button
+CKB-->Logged educator:manual evaluation page
+loop grades inserted are not numerical || not all the grades are inserted
+Logged educator->CKB:click "Save my modifications" button
+CKB->CKB:check all the\ninserted grades
+alt one or more grade are not numerical
+CKB-->Logged educator:inserted grades error
+else all the grades were inserted
+CKB-->Logged educator:manual evaluation succeded
+CKB->CKB:set battle in\n"Ended" state
+else there are still grades to be entered
+CKB-->Logged educator:updated manual evaluation page
+end
+end

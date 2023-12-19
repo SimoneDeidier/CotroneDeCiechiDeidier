@@ -1,0 +1,16 @@
+title Educator creates a tournament
+
+activate Logged educator
+activate CKB
+
+Logged educator->CKB:click "Create tournament" button
+CKB-->Logged educator:tournament creation page
+loop tournament not created
+Logged educator->CKB:educator fills all fields and clicks\n"Confirm tournament's creation" button
+CKB->CKB:check all\nthe data
+alt correct data
+CKB-->Logged educator:tournament creation confirmation
+else incorrect data || missing data || duplicated name
+CKB-->Logged educator:tournament creation error
+end
+end

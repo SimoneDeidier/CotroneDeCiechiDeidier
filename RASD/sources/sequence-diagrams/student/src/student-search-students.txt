@@ -1,0 +1,12 @@
+title Student search student profile
+
+activate Logged student
+activate CKB
+
+Logged student->CKB:searched student form
+CKB->CKB:gather all\nthe data
+CKB-->Logged student:results page
+opt
+Logged student->CKB:clicks on student's username
+CKB-->Logged student:chosen student profile page
+end

@@ -1,0 +1,27 @@
+title Educator invites a collaborator
+
+activate Logged educator
+activate CKB
+
+note over Logged educator, CKB:Educator is an admin of the tournament
+Logged educator->CKB:click "View tournament's informations" button
+CKB-->Logged educator:selected tournament page
+Logged educator->CKB:click "Add collaborator" button
+CKB-->Logged educator:new collaborator page
+loop selected educator is already an admin
+loop educator insert a new character in the search bar
+alt educator updates the search criteria
+Logged educator->CKB:updated serach criteria
+CKB-->Logged educator:possible matches updated
+else educator search for an user
+Logged educator->CKB:click "Send invitation" button
+end
+end
+CKB->CKB:check on the\nselected educator
+alt educator is already a collaborator
+CKB-->Logged educator:already a collaborator error
+else choosen educator is not a collaborator
+CKB->CKB:send the invitation\nto the educator
+CKB-->Logged educator:succesfull invitation message
+end
+end

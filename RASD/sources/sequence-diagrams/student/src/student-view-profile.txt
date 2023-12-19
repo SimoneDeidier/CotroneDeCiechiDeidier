@@ -1,0 +1,7 @@
+title Student view profile
+
+activate Logged student
+activate CKB
+
+Logged student->CKB:click "My Profile" button
+CKB-->Logged student:profile page with all the personal data

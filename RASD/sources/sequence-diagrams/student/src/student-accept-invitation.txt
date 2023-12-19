@@ -1,0 +1,21 @@
+title Student reply to a tem's invitation
+
+activate Logged student
+activate CKB
+
+Logged student->CKB:click "Notifications" button
+CKB-->Logged student:personal notifications page
+Logged student->Logged student:check all his\nnotifications
+alt student accept a pending invitation
+loop there is an error
+Logged student->CKB:accept pending invitation
+alt no error occurs
+CKB-->Logged student:refreshed notifications page
+else error occurs
+CKB-->Logged student:accept error message
+end
+end
+else student decline a pending invitatioon
+Logged student->CKB:decline pending invitation
+CKB-->Logged student:refreshed notifications page
+end

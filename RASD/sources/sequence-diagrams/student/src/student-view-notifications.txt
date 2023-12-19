@@ -1,0 +1,7 @@
+title Student views his notifications
+
+activate Logged student
+activate CKB
+
+Logged student->CKB:click "Notifications" button
+CKB-->Logged student:personal notifications page

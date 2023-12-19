@@ -1,0 +1,21 @@
+title Educator creates a new badge
+
+activate Logged educator
+activate CKB
+
+note over Logged educator, CKB:Educator is creating a new tournament\nand he is in the creation tournament page.
+Logged educator->CKB:click "Add badges to the tournament" button
+CKB-->Logged educator:new badge creation page
+loop invalid rule || invalid variable || missing field
+opt
+Logged educator->CKB:click "Add new variable" button
+ref over Logged educator, CKB:Educator creates a new variable
+end
+Logged educator->CKB:submit form with name, rules and variables
+CKB->CKB:check on\ninserted data
+alt invalid rule || invalid variable || missing field
+CKB-->Logged educator:badge creation error
+else all the inserted data are correct
+CKB-->Logged educator:badge created succesfull
+end
+end

@@ -1,0 +1,29 @@
+title Students Sign up
+
+activate Unregistered student
+activate CKB
+
+Unregistered student->CKB:get Login page
+CKB-->Unregistered student:login page
+Unregistered student->CKB:click "Sign up" button
+CKB-->Unregistered student: sign up page
+loop while registration ends
+Unregistered student->CKB:click "Student sign up" button\nand submit registration form
+CKB->CKB:check data
+alt data are correct
+CKB-->Unregistered student:confirmation email
+CKB-->Unregistered student:check email page
+loop regsistration link is invalid
+Unregistered student->CKB:click confirmation\nlink on the email
+alt clicked link is valid
+CKB-->Unregistered student:final confirmation page
+else link invalid
+CKB-->Unregistered student: new confirmation email
+end
+end
+else data incorrect || missing data || Terms of Services not accepted
+CKB-->Unregistered student:login page
+else user yet in the CKB's DB
+CKB-->Unregistered student:user already in the system page
+end
+end

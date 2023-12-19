@@ -1,0 +1,11 @@
+title Educator searches a student's profile
+
+activate Logged educator
+activate CKB
+
+Logged educator->CKB:click "Search" button and\nsubmits the search criteria
+CKB->CKB:gather all\nthe data
+CKB-->Logged educator:search result page
+Logged educator->CKB:click on student's username
+CKB->CKB:gather all\nthe data
+CKB-->Logged educator:studen'st personale page
