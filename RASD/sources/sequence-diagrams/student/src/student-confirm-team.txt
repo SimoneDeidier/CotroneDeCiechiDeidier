@@ -9,7 +9,7 @@ loop size constraints not respected
 Logged student->CKB: click "Join the battle!" button
 CKB->CKB:check data
 alt constraints respected
-CKB-->Logged student:succesful battle registration page
+CKB-->Logged student:successful battle registration page
 else constraints not respected
 CKB-->Logged student:constraints not respected error
 end

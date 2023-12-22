@@ -15,13 +15,13 @@ ref over Logged student, CKB:Student assembles his team\nand sends invitations.
 Logged student->CKB:click "Join the battle! button
 CKB->CKB:check data
 alt correct team
-CKB-->Logged student:succesful registration page
+CKB-->Logged student:successful registration page
 else incorrect team || connection or system error
 CKB-->Logged student:incorrect team error
 end
 end
 else min_size == 1 && max_size == 1 && deadline not expired
-CKB-->Logged student:succesful registration page
+CKB-->Logged student:successful registration page
 else deadline expired
 CKB-->Logged student:deadline passed error
 end
