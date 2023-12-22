@@ -11,7 +11,7 @@ Logged student->CKB:click "More information on this tournament!" button
 CKB-->Logged student:tournament information page
 Logged student->CKB: click "Join tournament!" button
 alt deadline not passed yet
-CKB-->Logged student:registration succesfull
+CKB-->Logged student:registration succesful
 else deadline has passed
 CKB-->Logged student:deadline has passed error
 end

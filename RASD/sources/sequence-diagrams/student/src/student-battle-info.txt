@@ -5,9 +5,9 @@ activate CKB
 
 Logged student->CKB:get student dashboard
 CKB-->Logged student:student dashboard page
-Logged student->Logged student:search and finds\nthe tournament
+Logged student->Logged student:search and find\nthe tournament
 Logged student->CKB:click "More information on this tournament!" button
 CKB-->Logged student:tournament information page
-Logged student->Logged student:search and\nfinds the battle
+Logged student->Logged student:search and\nfind the battle
 Logged student->CKB: click "Show Battle Informations!" button
 CKB-->Logged student:battle information page

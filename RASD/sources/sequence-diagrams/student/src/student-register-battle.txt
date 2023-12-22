@@ -4,7 +4,7 @@ activate Logged student
 activate CKB
 
 note over Logged student, CKB:Student is already in the\ntournament information page.
-Logged student->Logged student:search and\nfinds the battle
+Logged student->Logged student:search and\nfind the battle
 Logged student->CKB: click "Show Battle Informations!" button
 CKB-->Logged student:battle information page
 Logged student->CKB:click "Register!" button
@@ -15,13 +15,13 @@ ref over Logged student, CKB:Student assembles his team\nand sends invitations.
 Logged student->CKB:click "Join the battle! button
 CKB->CKB:check data
 alt correct team
-CKB-->Logged student:succesfull registration page
+CKB-->Logged student:succesful registration page
 else incorrect team || connection or system error
 CKB-->Logged student:incorrect team error
 end
 end
 else min_size == 1 && max_size == 1 && deadline not expired
-CKB-->Logged student:succesfull registration page
+CKB-->Logged student:succesful registration page
 else deadline expired
 CKB-->Logged student:deadline passed error
 end

@@ -13,7 +13,7 @@ CKB->CKB:check data
 alt data are correct
 CKB-->Unregistered student:confirmation email
 CKB-->Unregistered student:check email page
-loop regsistration link is invalid
+loop registration link is invalid
 Unregistered student->CKB:click confirmation\nlink on the email
 alt clicked link is valid
 CKB-->Unregistered student:final confirmation page
