@@ -1,4 +1,4 @@
-title Educator show battle's information
+title Educator looks at battle's information
 
 participant Logged educator
 participant CKB

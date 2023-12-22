@@ -5,5 +5,5 @@ activate CKB
 
 note over Logged student, CKB: Student is in the waiting room\nfor the team's creation.
 Logged student->Logged student:search and finds\na student to invite
-Logged student->CKB:clock "Invite student!" button
+Logged student->CKB:click "Invite student!" button
 CKB->CKB:send invitation\nto the student

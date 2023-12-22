@@ -11,12 +11,12 @@ CKB-->Unregistered educator:login page
 Unregistered educator->CKB:click "Sign up" button
 CKB-->Unregistered educator: sign up page
 loop while registration ends
-Unregistered educator->CKB:click "Student sign up" button\nand submit registration form
+Unregistered educator->CKB:click "Educator sign up" button\nand submit registration form
 CKB->CKB:check data
 alt data are correct && mail verified
 CKB-->Unregistered educator:confirmation email
 CKB-->Unregistered educator:check email page
-loop regsistration link is invalid
+loop registration link is invalid
 Unregistered educator->CKB:click confirmation\nlink on the email
 alt clicked link is valid
 CKB-->Unregistered educator:final confirmation page

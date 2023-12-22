@@ -14,14 +14,9 @@ alt a problem occurs
 CKB-->Logged educator:problem's information error
 else there are no problems
 CKB->CKB:set educator\nas collaborator
-CKB-->Logged educator:updaed notifications page
+CKB-->Logged educator:updated notifications page
 end
 else educator declines the invitation
 Logged educator->CKB:click "Reject" button
-alt a problem occurs
-CKB-->Logged educator:problem's information error
-else there are no problems
-CKB-->Logged educator:updaed notifications page
-end
 end
 end

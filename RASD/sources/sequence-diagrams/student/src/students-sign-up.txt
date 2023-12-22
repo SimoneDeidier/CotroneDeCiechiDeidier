@@ -22,8 +22,8 @@ CKB-->Unregistered student: new confirmation email
 end
 end
 else data incorrect || missing data || Terms of Services not accepted
-CKB-->Unregistered student:login page
-else user yet in the CKB's DB
+CKB-->Unregistered student:sign up page
+else user already in the CKB's DB
 CKB-->Unregistered student:user already in the system page
 end
 end

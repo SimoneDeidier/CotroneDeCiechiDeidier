@@ -13,7 +13,7 @@ loop educator insert a new character in the search bar
 alt educator updates the search criteria
 Logged educator->CKB:updated serach criteria
 CKB-->Logged educator:possible matches updated
-else educator search for an user
+else educator finds the user he was looking for
 Logged educator->CKB:click "Send invitation" button
 end
 end
@@ -22,6 +22,6 @@ alt educator is already a collaborator
 CKB-->Logged educator:already a collaborator error
 else choosen educator is not a collaborator
 CKB->CKB:send the invitation\nto the educator
-CKB-->Logged educator:succesfull invitation message
+CKB-->Logged educator:succesful invitation message
 end
 end

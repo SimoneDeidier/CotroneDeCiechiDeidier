@@ -8,7 +8,7 @@ Logged student->Logged student:search and\nfinds the battle
 Logged student->CKB: click "Show Battle Informations!" button
 CKB-->Logged student:battle information page
 Logged student->CKB:click "Register!" button
-alt deadline not passed yet
+alt (min_size != 1 || max_size != 1) && deadline not expired
 CKB-->Logged student:waiting room page
 loop incorrect team
 ref over Logged student, CKB:Student assembles his team\nand sends invitations.
@@ -20,8 +20,8 @@ else incorrect team || connection or system error
 CKB-->Logged student:incorrect team error
 end
 end
-else min_size == 1 && max_size == 1
+else min_size == 1 && max_size == 1 && deadline not expired
 CKB-->Logged student:succesfull registration page
-else deadline passed
+else deadline expired
 CKB-->Logged student:deadline passed error
 end

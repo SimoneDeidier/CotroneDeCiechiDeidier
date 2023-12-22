@@ -1,4 +1,4 @@
-title Educator show tournament's information
+title Educator looks at tournament's information
 
 participant Logged educator
 participant CKB

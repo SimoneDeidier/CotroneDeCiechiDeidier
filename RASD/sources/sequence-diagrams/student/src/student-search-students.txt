@@ -3,7 +3,7 @@ title Student search student profile
 activate Logged student
 activate CKB
 
-Logged student->CKB:searched student form
+Logged student->CKB:search criteria form
 CKB->CKB:gather all\nthe data
 CKB-->Logged student:results page
 opt

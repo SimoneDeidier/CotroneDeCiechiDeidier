@@ -7,11 +7,11 @@ note over Logged educator, CKB:Educator is creating a new tournament\nand he is 
 Logged educator->CKB:click "Add new variable" button
 CKB-->Logged educator:new variable definition page
 loop invalid rule || missing field
-Logged educator->CKB:click "Add new badge" button
+Logged educator->CKB:click "Add new variable" button
 CKB->CKB:check on\ninserted data
 alt invalid rule || missing field
 CKB-->Logged educator:variable definition error
 else all the inserted data are correct
-CKB-->Logged educator:variable definition succesfull
+CKB-->Logged educator:variable definition succesful
 end
 end

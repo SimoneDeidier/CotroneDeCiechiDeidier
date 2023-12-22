@@ -9,7 +9,7 @@ Logged educator->CKB:click "More information about this tournament!" button
 CKB-->Logged educator:tournament information page
 Logged educator->CKB:click "Create battle!" button
 CKB-->Logged educator:battle creation page
-loop incorrect data
+loop incorrect data || missing data
 Logged educator->Logged educator:fills battle\ncreation form
 Logged educator->CKB:click "Confirm battle's creation" button
 CKB->CKB:check on\nall the data

@@ -1,4 +1,4 @@
-title Student reply to a tem's invitation
+title Student reply to a team's invitation
 
 activate Logged student
 activate CKB
