@@ -28,7 +28,10 @@ WebApplication-->Registered student: failedLoginError
 WebApplication-->Registered student:loginPage
 
 else result==1
-note over Registered student:This is the value result\nhas when a student logs in
+note over Registered student:This is the value result\nwould have if a student\nwas logging in (more info in\nstudent's sequence diagram)
+
+else result==2
+note over Registered student:This is the value result has\nwhen an educator is logging in
 WebApplication->WebApplication: createSession(userID: int)
 WebApplication->InformationProvider:getTournaments()
 InformationProvider->TournamentInformation:getTournaments()
@@ -38,9 +41,6 @@ DataBase-->DatabaseService: tournaments: List<Tournament>
 DatabaseService-->TournamentInformation: tournaments: List<Tournament>
 TournamentInformation-->InformationProvider:tournaments: List<Tournament>
 InformationProvider-->WebApplication: tournaments: List<Tournament>
-WebApplication-->Registered student: studentPersonalPage
-
-else result==2
-note over Registered student:This is the value result\nwould have if an educator\nwas logging in (more info in\neducator's sequence diagram)
+WebApplication-->Registered student: educatorPersonalPage
 end
 end
