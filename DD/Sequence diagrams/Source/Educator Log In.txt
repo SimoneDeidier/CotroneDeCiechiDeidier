@@ -1,4 +1,4 @@
-title Student Log in
+title Educator Log in
 
 participant Registered student
 participant WebApplication
