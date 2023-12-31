@@ -1,0 +1,28 @@
+title Educator creates a new tournament
+
+Educator->WebApplication:login
+note over Educator: The login procedure is specified\nin a previous sequence diagram
+WebApplication-->Educator:educatorPersonalPage
+Educator->WebApplication:createNewTournament()
+WebApplication-->Educator: tournament creation page
+loop tournament not created
+Educator->WebApplication:submit(tournamentName: String, description: String, deadline: Date)
+WebApplication->EducatorManager: createTournament(tournamentName: String, description: String, deadline: Date)
+EducatorManager->TournamentManager: createTournament(tournamentName: String, description: String, deadline: Date)
+TournamentManager->DatabaseService:createTournament(tournamentName: String, description: String, deadline: Date)
+DatabaseService->DataBase: createTournament(tournamentName: String, description: String, deadline: Date)
+DataBase-->DatabaseService:result: boolean, tournamentID: int
+DatabaseService-->TournamentManager:result: boolean, tournamentID: int
+TournamentManager-->EducatorManager:result: boolean, tournamentID: int
+EducatorManager-->WebApplication:result: boolean, tournamentID: int
+alt !result
+WebApplication-->Educator: tournament creation error
+else result
+WebApplication-->Educator: tournament creation successful
+WebApplication-->Educator: tournamentPage
+end
+end
+
+
+
+
