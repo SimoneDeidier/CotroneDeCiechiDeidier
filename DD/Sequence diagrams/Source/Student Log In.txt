@@ -1,0 +1,46 @@
+title Student Log in
+
+participant Registered student
+participant WebApplication
+
+participant AuthenticationService
+participant InformationProvider
+
+participant TournamentInformation
+
+participant DatabaseService
+
+participant DataBase
+
+Registered student->WebApplication:openApplication()\n
+Registered student<--WebApplication:loginPage
+loop login fails
+Registered student ->WebApplication:  submit(username: String,psw: String)
+WebApplication-> AuthenticationService: checkLogin(username: String,psw: String)
+AuthenticationService->DatabaseService:checkLogin(username: String,psw: String)
+DatabaseService-> DataBase: checkLogin(username: String,psw: String)
+DataBase-->DatabaseService: result: int, userID: int
+DatabaseService-->AuthenticationService: result: int, userID: int
+AuthenticationService-->WebApplication: result: int, userID: int
+
+alt result==0
+WebApplication-->Registered student: failedLoginError
+WebApplication-->Registered student:loginPage
+
+else result==1
+note over Registered student:This is the value result\nhas when a student logs in
+WebApplication->WebApplication: createSession(userID: int)
+WebApplication->InformationProvider:getTournaments()
+InformationProvider->TournamentInformation:getTournaments()
+TournamentInformation->DatabaseService:getTournaments()
+DatabaseService->DataBase:getTournaments()
+DataBase-->DatabaseService: tournaments: List<Tournament>
+DatabaseService-->TournamentInformation: tournaments: List<Tournament>
+TournamentInformation-->InformationProvider:tournaments: List<Tournament>
+InformationProvider-->WebApplication: tournaments: List<Tournament>
+WebApplication-->Registered student: personalPage
+
+else result==2
+note over Registered student:This is the value result\nwould have if an educator\nwas logging in (more info in\neducator's sequence diagram)
+end
+end
