@@ -1,0 +1,40 @@
+title Student registers for a battle
+
+Logged student->WebApplication: getBattleInformation
+note over Logged student: The procedure for reaching the\ndesired battle page is specified\nin the proper sequence diagram
+WebApplication-->Logged student:battle information page
+Logged student->WebApplication:joinBattle(battleID: int)
+WebApplication->StudentManager:joinBattle(username: String,battleID: int)
+StudentManager->BattleManager:joinBattle(username: String,battleID: int)
+BattleManager->DatabaseService:joinBattle(username: String,battleID: int)
+DatabaseService->DataBase:joinBattle(username: String,battleID: int)
+DataBase-->DatabaseService: result: boolean, error: String, battleID: int
+DatabaseService -->BattleManager: result: boolean, error: String, battleID: int
+BattleManager -->StudentManager: result: boolean, error: String, battleID: int
+StudentManager-->WebApplication:result: boolean, error: String, battleID: int
+alt !result
+WebApplication-->Logged student:errorPage
+WebApplication-->Logged student:battle information page
+else result && error == ONE_STUDENT_BATTLE
+WebApplication-->Logged student:successful registration page
+else result && error == NULL
+WebApplication-->Logged student: waiting room page
+loop incorrect team
+note over Logged student: Student assembles his team\nand sends invitations
+Logged student->WebApplication:teamConfirmsEnrollment(battleID: int)
+WebApplication->StudentManager:teamConfirmsEnrollment(username:String, battleID: int)
+StudentManager->BattleManager:teamConfirmsEnrollment(username:String, battleID: int)
+BattleManager->DatabaseService:teamConfirmsEnrollment(username:String, battleID: int)
+DatabaseService->DataBase:teamConfirmsEnrollment(username:String, battleID: int)
+DataBase-->DatabaseService: result: boolean, error: String
+DatabaseService-->BattleManager:result: boolean, error: String
+BattleManager-->StudentManager:result: boolean, error: String
+StudentManager-->WebApplication:result: boolean, error: String
+alt !result
+WebApplication-->Logged student:errorPage
+else result
+WebApplication-->Logged student:successful registration page
+end
+end
+end
+
