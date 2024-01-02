@@ -29,10 +29,10 @@ WebApplication-->Logged educator: errorPage
 else result
 TournamentManager->DatabaseService: setEducatorAsCollaborator(tournamentID: int, username: String)
 DatabaseService->DataBase:setEducatorAsCollaborator(tournamentID: int, username: String)
-DataBase-->DatabaseService: result: boolean
-DatabaseService-->TournamentManager: result: boolean
-TournamentManager-->EducatorManager: result: boolean
-EducatorManager-->WebApplication:result: boolean
+DataBase-->DatabaseService: result: boolean, error: String
+DatabaseService-->TournamentManager: result: boolean, error: String
+TournamentManager-->EducatorManager: result: boolean, error: String
+EducatorManager-->WebApplication:result: boolean, error: String
 alt !result
 WebApplication-->Logged educator:errorPage
 else result

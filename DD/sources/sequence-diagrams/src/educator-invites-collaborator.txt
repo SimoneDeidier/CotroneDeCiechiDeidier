@@ -15,6 +15,7 @@ participant MailService
 participant DatabaseService
 participant DataBase
 
+entryspacing 1.1
 Logged educator->WebApplication:getTournamentPage
 note over Logged educator: The procedure for reaching a\nspecific tournament page is specified\nin a previous sequence diagram
 WebApplication-->Logged educator: tournament page
@@ -62,7 +63,6 @@ EducatorManager-->WebApplication:result: boolean
 WebApplication-->Logged educator:already a collaborator error
 else result
 EducatorManager->NotificationService:inviteForCollaboration(educator: Educator, tournamentID: int)
-NotificationService->MailService: inviteForCollaboration(educator: Educator, tournamentID: int)
 loop the value of "result" is true || three false "result" in a row
 NotificationService->DatabaseService:addNotificationForCollaboration(username: String,tournamentID: int)
 DatabaseService->DataBase: addNotificationForCollaboration(username: String,tournamentID: int)

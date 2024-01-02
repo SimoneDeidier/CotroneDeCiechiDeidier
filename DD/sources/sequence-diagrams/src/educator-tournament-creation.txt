@@ -12,6 +12,7 @@ participant DatabaseService
 participant DataBase
 participant MailService
 
+entryspacing 0.9
 Educator->WebApplication:login
 note over Educator: The login procedure is specified\nin a previous sequence diagram
 WebApplication-->Educator:educatorPersonalPage
@@ -31,7 +32,6 @@ alt !result
 WebApplication-->Educator: tournament creation error
 else result
 WebApplication-->Educator: tournament creation successful
-WebApplication-->Educator: tournamentPage
 note over WebApplication: The website sends a notification\nto every student about the creation\nof the new tournament
 WebApplication->StudentManager:notifyStudentsOfTournament(tournamentID: int)
 StudentManager->DatabaseService:getStudentsList()

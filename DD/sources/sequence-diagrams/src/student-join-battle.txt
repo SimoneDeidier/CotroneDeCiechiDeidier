@@ -1,5 +1,6 @@
 title Student registers for a battle
 
+entryspacing 0.5
 Logged student->WebApplication: getBattleInformation
 note over Logged student: The procedure for reaching the\ndesired battle page is specified\nin the proper sequence diagram
 WebApplication-->Logged student:battle information page
@@ -14,7 +15,6 @@ BattleManager -->StudentManager: result: boolean, error: String, battleID: int
 StudentManager-->WebApplication:result: boolean, error: String, battleID: int
 alt !result
 WebApplication-->Logged student:errorPage
-WebApplication-->Logged student:battle information page
 else result && error == ONE_STUDENT_BATTLE
 WebApplication-->Logged student:successful registration page
 else result && error == NULL
