@@ -13,18 +13,22 @@ LoggedStudent<--Web Application: NotificationPage
 LoggedStudent->LoggedStudent: check all his\nnotifications
 loop there is an error
 alt student rejects invitation
-LoggedStudent->Web Application: updateInvitation(state:Boolean, invitID:int)
-Web Application->Student Manager:updateInvitation(state:Boolean, invitID:int)
-Student Manager->Battle Manager:updateInvitation(state:Boolean, invitID:int)
-Battle Manager->Database Service:updateInvitation(state:Boolean, invitID:int)
-Database Service->Database:updateInvitation(state:Boolean, invitID:int)
+LoggedStudent->Web Application: updateInvitation(state:Boolean, inviteID:int)
+Web Application->Student Manager:updateInvitation(state:Boolean, inviteID:int)
+Student Manager->Battle Manager:updateInvitation(state:Boolean, inviteID:int)
+Battle Manager->Database Service:updateInvitation(state:Boolean, inviteID:int)
+Database Service->Database:updateInvitation(state:Boolean, inviteID:int)
+Database-->Database Service:updated Notification Page
+Database Service-->Battle Manager:updated Notification Page
+Battle Manager-->Student Manager:updated Notification Page
+Student Manager-->Web Application:updated Notification Page
 LoggedStudent<--Web Application: updated Notification Page
 else student accepts invitation
-LoggedStudent->Web Application: updateInvitation(state:Boolean, invitID:int)
-Web Application->Student Manager:updateInvitation(state:Boolean, invitID:int)
-Student Manager->Battle Manager:updateInvitation(state:Boolean, invitID:int)
-Battle Manager->Database Service:updateInvitation(state:Boolean, invitID:int)
-Database Service->Database:updateInvitation(state:Boolean, invitID:int)
+LoggedStudent->Web Application: updateInvitation(state:Boolean, inviteID:int)
+Web Application->Student Manager:updateInvitation(state:Boolean, inviteID:int)
+Student Manager->Battle Manager:updateInvitation(state:Boolean, inviteID:int)
+Battle Manager->Database Service:updateInvitation(state:Boolean, inviteID:int)
+Database Service->Database:updateInvitation(state:Boolean, inviteID:int)
 Database Service<--Database:success:Boolean, error:String, \nteamID:int, username:String
 Battle Manager<--Database Service::success:Boolean, error:String, \nteamID:int, username:String
 alt success==false

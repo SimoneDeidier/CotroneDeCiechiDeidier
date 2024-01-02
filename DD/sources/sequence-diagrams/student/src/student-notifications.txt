@@ -8,15 +8,15 @@ participant Notification Service
 participant Database Service
 participant Database
 
-LoggedStudent->Web Application: clickOnViewMyNotification
-Web Application->Student Manager: getNotifications(username:String)
-Student Manager->Notification Service:getNotifications(username:String)
-Notification Service->Database Service:getNotifications(username:String)
-Database Service->Database:getNotifications(username:String)
-Database Service<--Database:listNotifications: Notification
-Notification Service<--Database Service:listNotifications: Notification
-Student Manager<--Notification Service:listNotifications: Notification
-Web Application<--Student Manager:listNotifications: Notification
+LoggedStudent->Web Application: getNotifications(studentID: int)
+Web Application->Student Manager: getNotifications(studentID: int)
+Student Manager->Notification Service:getNotifications(studentID: int)
+Notification Service->Database Service:getNotifications(studentID: int)
+Database Service->Database:getNotifications(studentID: int)
+Database Service<--Database:listNotifications: List<Notification>
+Notification Service<--Database Service:listNotifications: List<Notification>
+Student Manager<--Notification Service:listNotifications: List<Notification>
+Web Application<--Student Manager:listNotifications: List<Notification>
 alt listNotifications==NULL
 LoggedStudent<--Web Application: NotificationError
 LoggedStudent<--Web Application: studentPersonalPage
