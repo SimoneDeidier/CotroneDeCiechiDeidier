@@ -1,0 +1,63 @@
+title Educator inserts a manual evaluation
+
+participant Registered Educator
+participant Web Application
+participant EducatorManager
+participant BattleManager
+participant DatabaseService
+participant Database
+
+activate Registered Educator
+activate Web Application
+
+Web Application-->Registered Educator:battlePage
+note over Registered Educator:The procedure to get the\nbattle page is specified\nin the proper sequence diagram
+Registered Educator->Web Application:assignManualEvaluation(educatorID: int, battleID: int)
+activate EducatorManager
+Web Application->EducatorManager:assignManualEvaluation(educatorID: int, battleID: int)
+activate BattleManager
+EducatorManager->BattleManager:assignManualEvaluation(educatorID: int, battleID: int)
+activate DatabaseService
+BattleManager->DatabaseService:assignManualEvaluation(educatorID: int, battleID: int)
+activate Database
+DatabaseService->Database:assignManualEvaluation(educatorID: int, battleID: int)
+Database-->DatabaseService:result: boolean
+deactivate Database
+DatabaseService-->BattleManager:result: boolean
+deactivate DatabaseService
+BattleManager-->EducatorManager:result: boolean
+deactivate BattleManager
+EducatorManager-->Web Application:result: boolean
+deactivate EducatorManager
+alt !result
+Web Application-->Registered Educator:lackOfPermissionsError message
+else result
+Web Application-->Registered Educator:manualEvaluationPage
+loop missingEvaluationCounter != 0 || numericalException
+Registered Educator->Web Application:saveModifications(insertedGrades: List<Grade>)
+activate EducatorManager
+Web Application->EducatorManager:saveModifications(insertedGrades: List<Grade>)
+activate BattleManager
+EducatorManager->BattleManager:saveModifications(insertedGrades: List<Grade>)
+activate DatabaseService
+BattleManager->DatabaseService:saveModifications(insertedGrades: List<Grade>)
+activate Database
+DatabaseService->Database:saveModifications(insertedGrades: List<Grade>)
+Database-->DatabaseService:missingEvaluationCounter: int, numeticalException: int
+deactivate Database
+DatabaseService-->BattleManager:missingEvaluationCounter: int, numeticalException: int
+deactivate DatabaseService
+BattleManager-->EducatorManager:missingEvaluationCounter: int, numeticalException: int
+deactivate BattleManager
+EducatorManager-->Web Application:missingEvaluationCounter: int, numeticalException: int
+deactivate EducatorManager
+alt missingEvaluationCounter == 0 && !numericaException
+Web Application-->Registered Educator:manualEvaluationSuccessfullyCompleted message
+note over Registered Educator:The educator can now close the tournament.\nA more detailed description of this action can\nbe found in the related sequence diagram.
+else numericalException
+Web Application-->Registered Educator:insertedGradesError message
+else missingEvaluationCounter != 0
+Web Application-->Registered Educator:updated manualEvaluationPage
+end
+end
+end
