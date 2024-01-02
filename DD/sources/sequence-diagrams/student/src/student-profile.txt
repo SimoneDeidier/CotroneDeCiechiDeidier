@@ -14,7 +14,7 @@ UserInformation-->InformationProvider:student: Student
 InformationProvider-->WebApplication:student: Student
 alt student == NULL
 WebApplication-->Student:errorPage
-else student != NULL
+else student != NULL && student.ID == userID
 WebApplication-->Student: studentInformationPage
 end
 

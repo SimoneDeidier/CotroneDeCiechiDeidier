@@ -15,7 +15,6 @@ TournamentInformation-->InformationProvider:tournament: Tournament
 InformationProvider-->WebApplication:tournament: Tournament
 alt tournament == NULL
 WebApplication-->Student: wrongTournamentDataError
-WebApplication-->Student:studentPersonalPage
 else tournament != NULL
 WebApplication-->Student: tournamentPage
 end
