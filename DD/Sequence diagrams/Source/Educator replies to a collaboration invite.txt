@@ -6,18 +6,18 @@ WebApplication-->Logged educator: notifications page
 loop a problem occurs
 alt educator rejects the invitation
 Logged educator->WebApplication: respondToInvitation(response: boolean, invitationID: int)
-WebApplication->EducatorManager: respondToInvitation(response: boolean, invitationID: int)
-EducatorManager->TournamentManager:respondToInvitation(response: boolean, invitationID: int)
-TournamentManager->DatabaseService:respondToInvitation(response: boolean, invitationID: int)
-DatabaseService->DataBase:respondToInvitation(response: boolean, invitationID: int)
+WebApplication->EducatorManager: respondToInvitation(educatorID: int, response: boolean, invitationID: int)
+EducatorManager->TournamentManager:respondToInvitation(educatorID: int, response: boolean, invitationID: int)
+TournamentManager->DatabaseService:respondToInvitation(educatorID: int, response: boolean, invitationID: int)
+DatabaseService->DataBase: respondToInvitation(educatorID: int, response: boolean, invitationID: int)
 WebApplication-->Logged educator: updated notifications page
 
 else educator accepts the invitation
 Logged educator->WebApplication: respondToInvitation(response: boolean, invitationID: int)
-WebApplication->EducatorManager: respondToInvitation(response: boolean, invitationID: int)
-EducatorManager->TournamentManager:respondToInvitation(response: boolean, invitationID: int)
-TournamentManager->DatabaseService:respondToInvitation(response: boolean, invitationID: int)
-DatabaseService->DataBase:respondToInvitation(response: boolean, invitationID: int)
+WebApplication->EducatorManager: respondToInvitation(educatorID: int, response: boolean, invitationID: int)
+EducatorManager->TournamentManager:respondToInvitation(educatorID: int, response: boolean, invitationID: int)
+TournamentManager->DatabaseService:respondToInvitation(educatorID: int, response: boolean, invitationID: int)
+DatabaseService->DataBase:respondToInvitation(educatorID: int, response: boolean, invitationID: int)
 DataBase-->DatabaseService: result: boolean, error: String,tournamentID: int, username: String
 DatabaseService-->TournamentManager:result: boolean, error: String,tournamentID: int, username: String
 
