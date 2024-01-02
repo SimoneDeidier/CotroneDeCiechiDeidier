@@ -38,6 +38,7 @@ Web Application<--Database Service: listEmail: String,listUsername:String
 alt listEmail==NULL && listUsername==NULL
 Educator<--Web Application: educatorPersonalPage
 else listEmail!=NULL && listUsername==NULL
+loop success!=true
 Web Application->Educator Manager: sendNotification(text:String,listEmail:String\nlistUsername)
 Educator Manager->Notification Service:sendNotification(text:String,listEmail:String,listUsername)
 Notification Service->Database Service: addNotification(text:String,listUsername)
@@ -47,13 +48,9 @@ Notification Service<--Database Service: success:Boolean
 alt success==true
 Notification Service->e-Mail Service: sendEmail(text:String,listEmail:String)
 e-Mail Service->e-Mail Service: sendEmail(text:String)
+end
 Educator Manager<--Notification Service: success:Boolean
 Web Application<--Educator Manager:success:Boolean
-Educator<--Web Application: educatorPersonalPage
-else success==false
-Educator Manager<--Notification Service: success:Boolean
-Web Application<--Educator Manager:success:Boolean
-Educator<--Web Application: NotificationFailedError
 Educator<--Web Application: educatorPersonalPage
 end
 
