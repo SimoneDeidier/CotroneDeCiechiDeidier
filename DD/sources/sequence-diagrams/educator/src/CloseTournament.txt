@@ -1,0 +1,63 @@
+frame Educator closes a tournament
+title Educator closes a tournament
+
+actor Educator
+participant Web Application
+participant Educator Manager
+participant Tournament Manager
+participant Database Service
+participant Database
+participant Notification Service
+participant e-Mail Service
+
+Educator->Web Application: login
+note over Educator: The login procedure is specified\nin the proper sequence diagram
+Educator<--Web Application: educatorPersonalPage
+Educator->Educator: User scrolls through\n the page and finds \nthe tournament
+Educator->Web Application:getTournamentInformation(tournamentID:int)
+note over Educator: The procedure is specified\nin the proper sequence diagram
+Educator<--Web Application: tournamentPage
+Educator->Web Application: clickOnEndTournament(tournamentID:int)
+Web Application->Educator Manager: endTournament(tournamentID:int)
+Educator Manager->Tournament Manager:endTournament(tournamentID:int)
+Tournament Manager->Database Service:endTournament(tournamentID:int)
+Database Service->Database:endTournament(tournamentID:int)
+Database Service<--Database: ended:Boolean
+Tournament Manager<--Database Service:ended:Boolean
+Educator Manager<--Tournament Manager:ended:Boolean
+Web Application<--Educator Manager:ended:Boolean
+
+alt ended==false
+Educator<--Web Application: ClosureFailedError
+Educator<--Web Application: educatorPersonalPage
+else ended==true
+Web Application->Database Service:getEmailAndUsernameStudentsfromTournament(tournamentID:int)
+Database Service->Database: getEmailAndUsernameStudentsfromTournament\n(tournamentID:int)
+Database Service<--Database: listEmail: String,listUsername:String
+Web Application<--Database Service: listEmail: String,listUsername:String
+alt listEmail==NULL && listUsername==NULL
+Educator<--Web Application: educatorPersonalPage
+else listEmail!=NULL && listUsername==NULL
+Web Application->Educator Manager: sendNotification(text:String,listEmail:String\nlistUsername)
+Educator Manager->Notification Service:sendNotification(text:String,listEmail:String,listUsername)
+Notification Service->Database Service: addNotification(text:String,listUsername)
+Database Service->Database: addNotification(text:String,listUsername)
+Database Service<--Database: success:Boolean
+Notification Service<--Database Service: success:Boolean
+alt success==true
+Notification Service->e-Mail Service: sendEmail(text:String,listEmail:String)
+e-Mail Service->e-Mail Service: sendEmail(text:String)
+Educator Manager<--Notification Service: success:Boolean
+Web Application<--Educator Manager:success:Boolean
+Educator<--Web Application: educatorPersonalPage
+else success==false
+Educator Manager<--Notification Service: success:Boolean
+Web Application<--Educator Manager:success:Boolean
+Educator<--Web Application: NotificationFailedError
+Educator<--Web Application: educatorPersonalPage
+end
+
+end
+
+end
+

@@ -1,0 +1,27 @@
+frame Student registers for a tournament
+title Student registers for a tournament
+
+ actor LoggedStudent
+ participant WebApplication
+ participant StudentManager
+ participant TournamentManager
+ participant DatabaseService
+ participant Database
+ 
+ LoggedStudent->WebApplication:getTournamentInformation
+ note over LoggedStudent: The procedure for reaching the\n desidered tournament page is\n specified in the proper sequence diagram
+LoggedStudent<--WebApplication:TournamentPage
+LoggedStudent->WebApplication:joinTournament(tournamentID:int)
+WebApplication->StudentManager:joinTournament(tournamentID:int)
+StudentManager->TournamentManager:joinTournament(tournamentID:int)
+TournamentManager->DatabaseService:joinTournament(tournamentID:int)
+DatabaseService->Database:joinTournament(tournamentID:int)
+DatabaseService<--Database:result:Boolean
+TournamentManager<--DatabaseService:result:Boolean
+StudentManager<--TournamentManager:result:Boolean
+WebApplication<--StudentManager:result:Boolean
+alt result==true
+LoggedStudent<--WebApplication:successful registration page
+else result==false 
+LoggedStudent<--WebApplication:errorPage
+end

@@ -1,0 +1,34 @@
+frame Show battle's information
+title Show battle's information
+
+actor Student
+participant Web Application
+participant Information Provider
+participant BattleInformation
+participant DatabaseService
+participant Database
+
+Student->Web Application: login
+note over Student: The login procedure is specified\nin the proper sequence diagram
+Student<--Web Application: studentPersonalPage
+Student->Student: User scrolls through\n the page and finds \nthe tournament
+Student->Web Application:getTournamentInformation(tournamentID:int)
+note over Student: The procedure is specified\nin the proper sequence diagram
+Student<--Web Application: tournamentPage
+Student->Student: User scrolls through\n the page and finds the battle
+Student->Web Application:getBattleInformation(battleID:int)
+Web Application->Information Provider:getBattleInformation(battleID:int)
+Information Provider->BattleInformation:getBattleInformation(battleID:int)
+BattleInformation->DatabaseService:getBattleInformation(battleID:int)
+DatabaseService->Database:getBattleInformation(battleID:int)
+DatabaseService<--Database:battle:Battle
+BattleInformation<--DatabaseService:battle:Battle
+Information Provider<--BattleInformation:battle:Battle
+Web Application<--Information Provider:battle:Battle
+alt battle==NULL
+Student<--Web Application: wrongBattleDataError
+Student<--Web Application: StudentPersonalPage
+else battle!=NULL
+Student<--Web Application: BattlePage
+end
+
