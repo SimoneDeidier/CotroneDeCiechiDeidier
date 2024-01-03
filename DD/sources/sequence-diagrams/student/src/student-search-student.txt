@@ -1,0 +1,34 @@
+title Student searches a student profile
+
+activate Registered Student
+activate Web Application
+
+Registered Student->Web Application:login
+note over Registered Student:The login procedure is specified\nin the proper sequence diagram
+Web Application-->Registered Student:studentPersonalPage
+Registered Student->Web Application:searchStudent(criteria: String)
+activate InformationProvider
+Web Application->InformationProvider:searchStudent(criteria: String)
+activate UserInformation
+InformationProvider->UserInformation:searchStudent(criteria: String)
+activate DatabaseService
+UserInformation->DatabaseService:searchStudent(criteria: String)
+activate Database
+DatabaseService->Database:searchStudent(criteria: String)
+Database-->DatabaseService:results: List<Student>
+deactivate Database
+DatabaseService-->UserInformation:results: List<Student>
+deactivate DatabaseService
+UserInformation-->InformationProvider:results: List<Student>
+deactivate UserInformation
+InformationProvider-->Web Application:results: List<Student>
+deactivate InformationProvider
+alt results == NULL || results.isEmpty()
+Web Application-->Registered Student:noMatchError message
+else results != NULL && !results.isEmpty()
+Web Application-->Registered Student:resultsPage
+opt
+Registered Student->Web Application:getStudentPersonalPage(studentID: int)
+Web Application-->Registered Student:chosenStudentPersonalPage
+end
+end

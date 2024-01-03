@@ -1,0 +1,71 @@
+title Educator creates a new battle
+
+activate Registered Educator
+activate Web Application
+
+Web Application-->Registered Educator:tournamentPage
+note over Registered Educator:The procedure to get the\ntournament page is specified\nin the proper sequence diagram
+Registered Educator->Web Application:createBattle(educatorID: int, tournamentID: int)
+activate EducatorManager
+Web Application->EducatorManager:createBattle(educatorID: int, tournamentID: int)
+activate TournamentManager
+EducatorManager->TournamentManager:createBattle(educatorID: int, tournamentID: int)
+activate DatabaseService
+TournamentManager->DatabaseService:createBattle(educatorID: int, tournamentID: int)
+activate Database
+DatabaseService->Database:createBattle(educatorID: int, tournamentID: int)
+Database-->DatabaseService:result: boolean
+deactivate Database
+DatabaseService-->TournamentManager:result: boolean
+deactivate DatabaseService
+TournamentManager-->EducatorManager:result: boolean
+deactivate TournamentManager
+EducatorManager-->Web Application:result: boolean
+deactivate EducatorManager
+alt !result
+Web Application-->Registered Educator:lackOfPermissionsError message
+else result
+Web Application-->Registered Educator:battleCreationPage
+loop errCount != 0
+Registered Educator->Web Application:uploadBattleData(codeKata: List<File>, minStudents : int, maxStudents: int, registrationDeadline: Date, submissionDeadline: Date)
+activate EducatorManager
+Web Application->EducatorManager:uploadBattleData(codeKata: List<File>, minStudents : int, maxStudents: int, registrationDeadline: Date, submissionDeadline: Date)
+activate TournamentManager
+EducatorManager->TournamentManager:uploadBattleData(codeKata: List<File>, minStudents : int, maxStudents: int, registrationDeadline: Date, submissionDeadline: Date)
+activate DatabaseService
+TournamentManager->DatabaseService:uploadBattleData(codeKata: List<File>, minStudents : int, maxStudents: int, registrationDeadline: Date, submissionDeadline: Date)
+activate Database
+DatabaseService->Database:uploadBattleData(codeKata: List<File>, minStudents : int, maxStudents: int, registrationDeadline: Date, submissionDeadline: Date)
+Database-->DatabaseService:errCount: int
+deactivate Database
+DatabaseService-->TournamentManager:errCount: int
+deactivate DatabaseService
+TournamentManager-->EducatorManager:errCount: int
+deactivate TournamentManager
+EducatorManager-->Web Application:errCount: int
+deactivate EducatorManager
+alt errCount == 0
+loop !noError
+activate EducatorManager
+Web Application->EducatorManager:newBattleNotification(tournamentID: int, battleName: String)
+activate NotificationService
+EducatorManager->NotificationService:newBattleNotification(tournamentID: int, battleName: String)
+activate MailService
+NotificationService->MailService:newBattleNotification(tournamentID: int, battleName: String)
+MailService-->NotificationService:noError: boolean
+deactivate MailService
+NotificationService-->EducatorManager:noError: boolean
+deactivate NotificationService
+EducatorManager-->Web Application:newBattleNotification(tournamentID: int, battleName: String)
+deactivate EducatorManager
+end
+Web Application-->Registered Educator:battleCreationConfirmation message
+else errCount == 1
+Web Application-->Registered Educator:mandatoryKataFileMissing error
+else errCount == 2
+Web Application-->Registered Educator:teamSizeDataError message
+else errCount == 3
+Web Application-->Registered Educator:dateError message
+end
+end
+end

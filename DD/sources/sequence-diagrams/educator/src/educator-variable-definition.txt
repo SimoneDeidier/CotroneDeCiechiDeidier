@@ -1,0 +1,42 @@
+title Educator creates a new variable
+
+participant Registered Educator
+participant Web Application
+participant EducatorManager
+participant TournamentManager
+participant DatabaseService
+participant Database
+
+activate Registered Educator
+activate Web Application
+
+Web Application-->Registered Educator:newBadgeCreationPage
+note over Registered Educator:The procedure to get the badge\ncreation page is specified in the\nproper sequence diagram
+Registered Educator->Web Application:addVariables()
+Web Application-->Registered Educator:newVariableCreationPage
+loop ruleException || missingFieldsException
+Registered Educator->Web Application:createNewVariable(variableName: String, rule: Expression)
+activate EducatorManager
+Web Application->EducatorManager:createNewVariable(variableName: String, rule: Expression)
+activate TournamentManager
+EducatorManager->TournamentManager:createNewVariable(variableName: String, rule: Expression)
+activate DatabaseService
+TournamentManager->DatabaseService:createNewVariable(variableName: String, rule: Expression)
+activate Database
+DatabaseService->Database:createNewVariable(variableName: String, rule: Expression)
+Database-->DatabaseService:ruleException: boolean, missingFieldsException: boolean
+deactivate Database
+DatabaseService-->TournamentManager:ruleException: boolean, missingFieldsException: boolean
+deactivate DatabaseService
+TournamentManager-->EducatorManager:ruleException: boolean, missingFieldsException: boolean
+deactivate TournamentManager
+EducatorManager-->Web Application:ruleException: boolean, missingFieldsException: boolean
+deactivate EducatorManager
+alt !ruleException && !missingFieldsException
+Web Application-->Registered Educator:variableCreatedSuccessfully message
+else ruleException
+Web Application-->Registered Educator:wrongRuleInsertedError message
+else missingFieldsException
+Web Application-->Registered Educator:mandatoryFieldsNotFilledInError message
+end
+end

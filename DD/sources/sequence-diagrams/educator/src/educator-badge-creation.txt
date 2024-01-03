@@ -1,0 +1,45 @@
+title Educator creates a new badge
+
+participant Registered Educator
+participant Web Application
+participant EducatorManager
+participant TournamentManager
+participant DatabaseService
+participant Database
+
+activate Registered Educator
+activate Web Application
+
+Web Application-->Registered Educator:tournamentCreationPage
+note over Registered Educator:The procedure to get the tournament\ncreation page is specified in the\nproper sequence diagram
+Registered Educator->Web Application:addBadges()
+Web Application-->Registered Educator:newBadgeCreationPage
+loop ruleException || variableException || missingFieldsException
+note over Registered Educator:The educator can now create new\nvariables for badge definition. A more\ndetailed description of this action can\nbe found in the related sequence diagram.
+Registered Educator->Web Application:createNewBadge(badgeName: String, rules: List<Expression>, variables: List<Variable>)
+activate EducatorManager
+Web Application->EducatorManager:createNewBadge(badgeName: String, rules: List<Expression>, variables: List<Variable>)
+activate TournamentManager
+EducatorManager->TournamentManager:createNewBadge(badgeName: String, rules: List<Expression>, variables: List<Variable>)
+activate DatabaseService
+TournamentManager->DatabaseService:createNewBadge(badgeName: String, rules: List<Expression>, variables: List<Variable>)
+activate Database
+DatabaseService->Database:createNewBadge(badgeName: String, rules: List<Expression>, variables: List<Variable>)
+Database-->DatabaseService:ruleException: boolean, variableException: boolean, missingFieldsException: boolean
+deactivate Database
+DatabaseService-->TournamentManager:ruleException: boolean, variableException: boolean, missingFieldsException: boolean
+deactivate DatabaseService
+TournamentManager-->EducatorManager:ruleException: boolean, variableException: boolean, missingFieldsException: boolean
+deactivate TournamentManager
+EducatorManager-->Web Application:ruleException: boolean, variableException: boolean, missingFieldsException: boolean
+deactivate EducatorManager
+alt !ruleException && !variableException && !missingFieldsException
+Web Application-->Registered Educator:badgeCreatedSuccessfully message
+else ruleException
+Web Application-->Registered Educator:wrongRuleInsertedError message
+else variableException
+Web Application-->Registered Educator:invalidVariableError message
+else missingFieldsException
+Web Application-->Registered Educator:mandatoryFieldsNotFilledInError message
+end
+end

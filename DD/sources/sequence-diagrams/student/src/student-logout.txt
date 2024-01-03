@@ -1,0 +1,11 @@
+title Student Log Out
+
+activate Registered Student
+activate Web Application
+
+Registered Student->Web Application:login
+note over Registered Student:The login procedure is specified\nin the proper sequence diagram
+Web Application-->Registered Student:studentPersonalPage
+Registered Student->Web Application:logout(void)
+Web Application->Web Application:invalidateSession(void)
+Web Application-->Registered Student:loginPage

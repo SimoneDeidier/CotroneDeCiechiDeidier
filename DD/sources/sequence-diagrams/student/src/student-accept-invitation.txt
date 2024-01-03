@@ -1,0 +1,55 @@
+frame Student accepts an invitation to a team
+title Student accepts an invitation to a team
+
+actor LoggedStudent
+participant Web Application
+participant Student Manager
+participant Battle Manager
+participant Database Service
+participant Database
+
+LoggedStudent->Web Application: clickOnViewMyNotification
+LoggedStudent<--Web Application: NotificationPage
+LoggedStudent->LoggedStudent: check all his\nnotifications
+loop there is an error
+alt student rejects invitation
+LoggedStudent->Web Application: updateInvitation(state:Boolean, inviteID:int)
+Web Application->Student Manager:updateInvitation(state:Boolean, inviteID:int)
+Student Manager->Battle Manager:updateInvitation(state:Boolean, inviteID:int)
+Battle Manager->Database Service:updateInvitation(state:Boolean, inviteID:int)
+Database Service->Database:updateInvitation(state:Boolean, inviteID:int)
+Database-->Database Service:updated Notification Page
+Database Service-->Battle Manager:updated Notification Page
+Battle Manager-->Student Manager:updated Notification Page
+Student Manager-->Web Application:updated Notification Page
+LoggedStudent<--Web Application: updated Notification Page
+else student accepts invitation
+LoggedStudent->Web Application: updateInvitation(state:Boolean, inviteID:int)
+Web Application->Student Manager:updateInvitation(state:Boolean, inviteID:int)
+Student Manager->Battle Manager:updateInvitation(state:Boolean, inviteID:int)
+Battle Manager->Database Service:updateInvitation(state:Boolean, inviteID:int)
+Database Service->Database:updateInvitation(state:Boolean, inviteID:int)
+Database Service<--Database:success:Boolean, error:String, \nteamID:int, username:String
+Battle Manager<--Database Service::success:Boolean, error:String, \nteamID:int, username:String
+alt success==false
+Student Manager<--Battle Manager::success:Boolean, error:String, 
+Web Application<--Student Manager::success:Boolean, error:String, 
+LoggedStudent<--Web Application: errorPage
+else success==true
+Battle Manager->Database Service:addStudentIntoTeam(teamID:int, username:String)
+Database Service->Database:addStudentIntoTeam(teamID:int, username:String)
+Database Service<--Database:result:Boolean
+Battle Manager<--Database Service:result:Boolean
+Student Manager<--Battle Manager:result:Boolean
+Web Application<--Student Manager:result:Boolean
+alt result==true
+LoggedStudent<--Web Application:updated Notification Page
+else result==false
+LoggedStudent<--Web Application:errorPage
+end
+
+end
+
+end
+
+end

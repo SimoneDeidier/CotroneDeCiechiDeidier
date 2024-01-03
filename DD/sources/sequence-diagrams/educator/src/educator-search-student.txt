@@ -1,0 +1,41 @@
+title Educator searches a student profile
+
+participant Registered Educator
+participant Web Application
+participant InformationProvider
+participant UserInformation
+participant DatabaseService
+participant Database
+
+activate Registered Educator
+activate Web Application
+
+Registered Educator->Web Application:login
+note over Registered Educator:The login procedure is specified\nin the proper sequence diagram
+Web Application-->Registered Educator:educatorPersonalPage
+Registered Educator->Web Application:searchStudent(criteria: String)
+activate InformationProvider
+Web Application->InformationProvider:searchStudent(criteria: String)
+activate UserInformation
+InformationProvider->UserInformation:searchStudent(criteria: String)
+activate DatabaseService
+UserInformation->DatabaseService:searchStudent(criteria: String)
+activate Database
+DatabaseService->Database:searchStudent(criteria: String)
+Database-->DatabaseService:results: List<Student>
+deactivate Database
+DatabaseService-->UserInformation:results: List<Student>
+deactivate DatabaseService
+UserInformation-->InformationProvider:results: List<Student>
+deactivate UserInformation
+InformationProvider-->Web Application:results: List<Student>
+deactivate InformationProvider
+alt results == NULL || results.isEmpty()
+Web Application-->Registered Educator:noMatchError message
+else results != NULL && !results.isEmpty()
+Web Application-->Registered Educator:resultsPage
+opt
+Registered Educator->Web Application:getStudentPersonalPage(studentID: int)
+Web Application-->Registered Educator:chosenStudentPersonalPage
+end
+end

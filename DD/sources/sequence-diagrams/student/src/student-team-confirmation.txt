@@ -1,0 +1,40 @@
+title Student confirms the team registration
+
+participant Registered Student
+participant Web Application
+
+
+activate Registered Student
+activate Web Application
+
+Web Application-->Registered Student:waitingRoomPage
+note over Registered Student:The procedure to get the waiting room\npage and how to invite student into the\nteam are specified in the proper\nsequence diagrams
+loop result == 1 || result == 2
+Registered Student->Web Application:registerTeam(studentID: int, battleID: int, teamName: String)
+activate StudentManager
+Web Application->StudentManager:registerTeam(studentID: int, battleID: int, teamName: String)
+activate BattleManager
+StudentManager->BattleManager:registerTeam(studentID: int, battleID: int, teamName: String)
+activate DatabaseService
+BattleManager->DatabaseService:registerTeam(studentID: int, battleID: int, teamName: String)
+activate Database
+DatabaseService->Database:registerTeam(studentID: int, battleID: int, teamName: String)
+Database-->DatabaseService:result: int
+deactivate Database
+DatabaseService-->BattleManager:result: int
+deactivate DatabaseService
+BattleManager-->StudentManager:result: int
+deactivate BattleManager
+StudentManager-->Web Application:result: int
+deactivate StudentManager
+alt result == 0
+Web Application-->Registered Student:successfulRegistration message
+else result == 1
+Web Application-->Registered Student:invalidNameError message
+else result == 2
+Web Application-->Registered Student:teamConstraintsError message
+else result == 3
+Web Application-->Registered Student:deadlineAlreadyPassedError message
+Web Application-->Registered Student:redirect tournamentPage
+end
+end

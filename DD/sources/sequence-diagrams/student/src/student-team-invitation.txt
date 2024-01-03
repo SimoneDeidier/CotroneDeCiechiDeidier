@@ -1,0 +1,77 @@
+title Student invites a student into the team
+
+participant Registered Student
+participant Web Application
+participant InformationProvider
+participant UserInformation
+participant DatabaseService
+participant Database
+participant StudentManager
+participant BattleManager
+participant NotificationService
+participant MailService
+
+activate Registered Student
+activate Web Application
+
+Web Application-->Registered Student:waitingRoomPage
+note over Registered Student:The procedure to get the waiting\nroom page is specified in the proper\nsequence diagram
+loop student updates the search criteria
+alt student updates the search criteria
+Registered Student->Web Application:searchStudent(criteria: String)
+activate InformationProvider
+Web Application->InformationProvider:searchStudent(criteria: String)
+activate UserInformation
+InformationProvider->UserInformation:searchStudent(criteria: String)
+activate DatabaseService
+UserInformation->DatabaseService:searchStudent(criteria: String)
+activate Database
+DatabaseService->Database:searchStudent(criteria: String)
+Database-->DatabaseService:studentsList: List<Student>
+deactivate Database
+DatabaseService-->UserInformation:studentsList: List<Student>
+deactivate DatabaseService
+UserInformation-->InformationProvider:studentsList: List<Student>
+deactivate UserInformation
+InformationProvider-->Web Application:studentsList: List<Student>
+deactivate InformationProvider
+Web Application->Web Application:toJson(results: List<Student>)
+Web Application-->Registered Student:results: JSON
+else student presses "Invite student!" button
+Registered Student->Web Application:inviteStudent(criteria: String, battleID: int, studentID: int)
+activate StudentManager
+Web Application->StudentManager:inviteStudent(criteria: String, battleID: int, studentID: int)
+activate BattleManager
+StudentManager->BattleManager:inviteStudent(criteria: String, battleID: int, studentID: int)
+activate DatabaseService
+BattleManager->DatabaseService:inviteStudent(criteria: String, battleID: int, studentID: int)
+activate Database
+DatabaseService->Database:inviteStudent(criteria: String, battleID: int, studentID: int)
+Database-->DatabaseService:result: boolean, student: Student
+deactivate Database
+DatabaseService-->BattleManager:result: boolean, student: Student
+deactivate DatabaseService
+BattleManager-->StudentManager:result: boolean, student: Student
+deactivate BattleManager
+alt !result
+StudentManager-->Web Application:result: boolean
+Web Application-->Registered Student:alreadyMember error
+else result
+activate NotificationService
+StudentManager->NotificationService:sendTeamInviteNotification(receiver: Student)
+activate MailService
+NotificationService->MailService::sendTeamInviteNotification(receiver: Student)
+MailService-->NotificationService:result: boolean
+deactivate MailService
+NotificationService-->StudentManager:result: boolean
+deactivate NotificationService
+StudentManager-->Web Application:result: boolean
+deactivate StudentManager
+alt !result
+Web Application-->Registered Student:notificationError
+else result
+Web Application-->Registered Student:successfulInvitation
+end
+end
+end
+end

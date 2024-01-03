@@ -1,0 +1,25 @@
+frame View my notification
+title View my notification
+
+actor LoggedStudent
+participant Web Application
+participant Student Manager
+participant Notification Service
+participant Database Service
+participant Database
+
+LoggedStudent->Web Application: getNotifications(studentID: int)
+Web Application->Student Manager: getNotifications(studentID: int)
+Student Manager->Notification Service:getNotifications(studentID: int)
+Notification Service->Database Service:getNotifications(studentID: int)
+Database Service->Database:getNotifications(studentID: int)
+Database Service<--Database:listNotifications: List<Notification>
+Notification Service<--Database Service:listNotifications: List<Notification>
+Student Manager<--Notification Service:listNotifications: List<Notification>
+Web Application<--Student Manager:listNotifications: List<Notification>
+alt listNotifications==NULL
+LoggedStudent<--Web Application: NotificationError
+LoggedStudent<--Web Application: studentPersonalPage
+else 
+LoggedStudent<--Web Application: NotificationPage
+end
