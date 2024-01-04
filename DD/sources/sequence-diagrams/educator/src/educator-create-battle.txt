@@ -56,7 +56,7 @@ MailService-->NotificationService:noError: boolean
 deactivate MailService
 NotificationService-->EducatorManager:noError: boolean
 deactivate NotificationService
-EducatorManager-->Web Application:newBattleNotification(tournamentID: int, battleName: String)
+EducatorManager-->Web Application:noError: boolean
 deactivate EducatorManager
 end
 Web Application-->Registered Educator:battleCreationConfirmation message
