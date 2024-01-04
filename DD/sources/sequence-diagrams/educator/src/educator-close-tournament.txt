@@ -31,10 +31,14 @@ alt ended==false
 Educator<--Web Application: ClosureFailedError
 Educator<--Web Application: educatorPersonalPage
 else ended==true
-Web Application->Database Service:getEmailAndUsernameStudentsfromTournament(tournamentID:int)
+Web Application->Educator Manager: getEmailAndUsernameStudentsfromTournament(tournamentID:int)
+Educator Manager->Tournament Manager: getEmailAndUsernameStudentsfromTournament(tournamentID:int)
+Tournament Manager->Database Service: getEmailAndUsernameStudentsfromTournament(tournamentID:int)
 Database Service->Database: getEmailAndUsernameStudentsfromTournament\n(tournamentID:int)
 Database Service<--Database: listEmail: String,listUsername:String
-Web Application<--Database Service: listEmail: String,listUsername:String
+Tournament Manager<--Database Service:listEmail: String,listUsername:String
+Educator Manager<--Tournament Manager:listEmail: String,listUsername:String
+Web Application<--Educator Manager: listEmail: String,listUsername:String
 alt listEmail==NULL && listUsername==NULL
 Educator<--Web Application: educatorPersonalPage
 else listEmail!=NULL && listUsername==NULL
