@@ -31,14 +31,14 @@ alt ended==false
 Educator<--Web Application: ClosureFailedError
 Educator<--Web Application: educatorPersonalPage
 else ended==true
-Web Application->Educator Manager: getEmailAndUsernameStudentsfromTournament(tournamentID:int)
-Educator Manager->Tournament Manager: getEmailAndUsernameStudentsfromTournament(tournamentID:int)
-Tournament Manager->Database Service: getEmailAndUsernameStudentsfromTournament(tournamentID:int)
-Database Service->Database: getEmailAndUsernameStudentsfromTournament\n(tournamentID:int)
-Database Service<--Database: listEmail: String,listUsername:String
-Tournament Manager<--Database Service:listEmail: String,listUsername:String
-Educator Manager<--Tournament Manager:listEmail: String,listUsername:String
-Web Application<--Educator Manager: listEmail: String,listUsername:String
+Web Application->Educator Manager: getEmailAndUsernameStudentsFromTournament\n(tournamentID:int)
+Educator Manager->Tournament Manager: getEmailAndUsernameStudentsFromTournament\n(tournamentID:int)
+Tournament Manager->Database Service: getEmailAndUsernameStudentsFromTournament\n(tournamentID:int)
+Database Service->Database: getEmailAndUsernameStudentsFromTournament\n(tournamentID:int)
+Database Service<--Database: listEmail:List<String>,\nlistUsername:List<String>
+Tournament Manager<--Database Service:listEmail:List<String>,\nlistUsername:List<String>
+Educator Manager<--Tournament Manager:listEmail:List<String>,\nlistUsername:List<String>
+Web Application<--Educator Manager: listEmail:List<String>,\nlistUsername:List<String>
 alt listEmail==NULL && listUsername==NULL
 Educator<--Web Application: educatorPersonalPage
 else listEmail!=NULL && listUsername==NULL
