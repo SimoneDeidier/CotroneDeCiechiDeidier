@@ -4,7 +4,6 @@ participant Educator
 participant WebApplication
 participant EducatorManager
 participant TournamentManager
-participant StudentManager
 
 participant NotificationService
 
@@ -33,12 +32,12 @@ WebApplication-->Educator: tournament creation error
 else result
 WebApplication-->Educator: tournament creation successful
 note over WebApplication: The website sends a notification\nto every student about the creation\nof the new tournament
-WebApplication->StudentManager:notifyStudentsOfTournament(tournamentID: int)
-StudentManager->DatabaseService:getStudentsList()
+WebApplication->EducatorManager:notifyStudentsOfTournament(tournamentID: int)
+EducatorManager->NotificationService: notifyStudentsOfTournament(tournamentID: int)
+NotificationService->DatabaseService:getStudentsList()
 DatabaseService->DataBase:getStudentsList()
 DataBase-->DatabaseService:students: List<Student>
-DatabaseService-->StudentManager:students: List<Student>
-StudentManager->NotificationService: notifyStudentsOfTournament(tournamentID: int,students: List<Student>)
+DatabaseService-->NotificationService:students: List<Student>
 loop every student is notified && (the value of "result" is true || three false "result" in a row for a student)
 NotificationService->DatabaseService:addNotificationForNewTournament(username: String,tournamentID: int)
 DatabaseService->DataBase: addNotificationForNewTournament(username: String,tournamentID: int)
