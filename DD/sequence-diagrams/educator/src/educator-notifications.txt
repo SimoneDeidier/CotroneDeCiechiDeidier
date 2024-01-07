@@ -13,10 +13,10 @@ Web Application->Educator Manager: getNotifications(username:String)
 Educator Manager->Notification Service:getNotifications(username:String)
 Notification Service->Database Service:getNotifications(username:String)
 Database Service->Database:getNotifications(username:String)
-Database Service<--Database:listNotifications<Notification>
-Notification Service<--Database Service:listNotifications<Notification>
-Educator Manager<--Notification Service:listNotifications<Notification>
-Web Application<--Educator Manager:listNotifications<Notification>
+Database Service<--Database:listNotifications: List<Notification>
+Notification Service<--Database Service:listNotifications: List<Notification>
+Educator Manager<--Notification Service:listNotifications: List<Notification>
+Web Application<--Educator Manager:listNotifications: List<Notification>
 alt listNotifications==NULL
 LoggedEducator<--Web Application: NotificationError
 LoggedEducator<--Web Application: educatorPersonalPage
